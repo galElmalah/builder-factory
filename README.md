@@ -7,12 +7,12 @@ typescript friendly builder creator!
 
 ### Installation
 
-`npm i builder-factory`
+`npm i builder-factory-creator`
 
 ### Usage
 
 ```typescript 
-import { builderFactory } from 'builder-factory';
+import { builderFactory } from 'builder-factory-creator';
 const schema = {
   a: 1,
   b: 3,
