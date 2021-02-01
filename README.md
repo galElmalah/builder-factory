@@ -1,13 +1,18 @@
-# create-builder
+# create-factory
 
 > Generated using [Scaffolder](https://github.com/galElmalah/scaffolder)!
 
 typescript friendly builder creator!
 
-### usage
+
+### Installation
+
+`npm i builder-factory`
+
+### Usage
 
 ```typescript 
-import { builderFactory } from 'create-builder';
+import { builderFactory } from 'builder-factory';
 const schema = {
   a: 1,
   b: 3,
