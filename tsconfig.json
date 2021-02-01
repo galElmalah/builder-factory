@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "commonJs",
+    "target": "es2015",
+    "outDir": "dist/",
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "declaration": true,
+    "lib": ["es6"],
+    "skipLibCheck": true,
+    "esModuleInterop":true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}
