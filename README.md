@@ -1,4 +1,4 @@
-# create-factory
+# builder-factory
 
 > Generated using [Scaffolder](https://github.com/galElmalah/scaffolder)!
 

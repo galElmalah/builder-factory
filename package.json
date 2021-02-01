@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/galElmalah/create-builder"
+    "url": "https://github.com/galElmalah/builder-factory"
   },
   "scripts": {
     "test": "jest",
