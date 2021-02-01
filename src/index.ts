@@ -5,7 +5,7 @@ const capitalize = (word: string) => {
   return firstChar.toUpperCase() + restOfTheWord.join('');
 };
 
-interface BuildersFactory<T> {
+export interface BuildersFactory<T> {
   aBuilder(): API<T>;
 }
 
