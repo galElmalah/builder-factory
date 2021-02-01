@@ -1,4 +1,4 @@
-interface Factory<T> {
+interface BuildersFactory<T> {
     aBuilder(): API<T>;
 }
 declare type API<T> = {
@@ -12,5 +12,5 @@ declare type BaseMethods<T> = {
  *
  * @param schema An object containing the default object. The builder type will be inferred from the structure of the scheme object.
  */
-export declare const builderFactory: <T>(schema: T) => Factory<T>;
+export declare const builderFactory: <T>(schema: T) => BuildersFactory<T>;
 export {};

@@ -5,7 +5,7 @@ const capitalize = (word: string) => {
   return firstChar.toUpperCase() + restOfTheWord.join('');
 };
 
-interface Factory<T> {
+interface BuildersFactory<T> {
   aBuilder(): API<T>;
 }
 
@@ -21,7 +21,7 @@ type BaseMethods<T> = { build: () => T; getSchema: () => T };
  *
  * @param schema An object containing the default object. The builder type will be inferred from the structure of the scheme object.
  */
-export const builderFactory = <T>(schema: T): Factory<T> => {
+export const builderFactory = <T>(schema: T): BuildersFactory<T> => {
   const aBuilder = () => {
     const targetObject: T = cloneDeep(schema);
 
