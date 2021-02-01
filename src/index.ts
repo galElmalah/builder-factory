@@ -5,34 +5,43 @@ const capitalize = (word: string) => {
   return firstChar.toUpperCase() + restOfTheWord.join('');
 };
 
-type BaseMethods<T> = { build: () => T; getSchema: () => T };
+interface Factory<T> {
+  aBuilder(): API<T>;
+}
 
 type API<T> = {
-  [K in keyof T as `with${Capitalize<string & K>}`]: (value: T[K]) => API<T> & BaseMethods<T>;
+  [K in keyof T as `with${Capitalize<string & K>}`]: (
+    value: T[K]
+  ) => API<T> & BaseMethods<T>;
 } & BaseMethods<T>;
+
+type BaseMethods<T> = { build: () => T; getSchema: () => T };
 
 /**
  *
  * @param schema An object containing the default object. The builder type will be inferred from the structure of the scheme object.
  */
-export const createBuilder = <T>(schema: T) => {
-  const targetObject: T = { ...schema };
+export const builderFactory = <T>(schema: T): Factory<T> => {
+  const aBuilder = () => {
+    const targetObject: T = cloneDeep(schema);
 
-  const api: unknown = {
-    build: () => {
-      return targetObject;
-    },
-    getSchema: () => {
-      return cloneDeep(schema);
-    },
-  };
-
-  for (const key in schema) {
-    api[`with${capitalize(key)}`] = (value: any) => {
-      targetObject[key] = value;
-      return api;
+    const api: unknown = {
+      build: () => {
+        return targetObject;
+      },
+      getSchema: () => {
+        return cloneDeep(schema);
+      },
     };
-  }
 
-  return api as API<T>;
+    for (const key in schema) {
+      api[`with${capitalize(key)}`] = (value: any) => {
+        targetObject[key] = value;
+        return api;
+      };
+    }
+
+    return api as API<T>;
+  };
+  return { aBuilder };
 };
