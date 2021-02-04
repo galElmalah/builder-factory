@@ -8,7 +8,7 @@ describe('createBuilder', () => {
 			b: 3,
 			c: [],
 		};
-		const builder = builderFactory(schema, {push: (state:typeof schema,value:number) => {
+		const builder = builderFactory(schema, {push: (state, value) => {
 			state.c.push(value)
 		}}).aBuilder();
 		builder.push(123)

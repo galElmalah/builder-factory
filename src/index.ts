@@ -13,27 +13,30 @@ export interface BuildersFactory<T, U> {
 type API<T, U> = {
   [K in keyof T as `with${Capitalize<string & K>}`]: (
     value: T[K]
-  ) => API<T, U> & BaseMethods<T> & CustomSetters<T, U>;
+  ) => API<T, U> & BaseMethods<T> & WrappedSetters<T, U>;
 } &
   BaseMethods<T> &
-  CustomSetters<T, U>;
+  WrappedSetters<T, U>;
 
-type CustomSetters<T, U> = {
+type WrappedSetters<T, U> = {
   [K in keyof U]: (
     value: any
-  ) => API<T, U> & BaseMethods<T> & CustomSetters<T, U>;
+  ) => API<T, U> & BaseMethods<T> & WrappedSetters<T, U>;
 };
 
+interface CustomSettersOption<T> {
+  [key: string]: (state: T, value: any) => void
+}
 type BaseMethods<T> = { build: () => T; getSchema: () => T };
 
 /**
  *
  * @param schema An object containing the default object. The builder type will be inferred from the structure of the scheme object.
  */
-export const builderFactory = <T, U>(
+export const builderFactory = <T>(
   schema: T,
-  customSetters?: U
-): BuildersFactory<T, U> => {
+  customSetters?: CustomSettersOption<T>
+): BuildersFactory<T,  CustomSettersOption<T>> => {
   const getSchema = () => {
     return cloneDeep(schema);
   };
@@ -50,7 +53,7 @@ export const builderFactory = <T, U>(
 
     const setterWrapper = (setter) => (value: any) => {
       setter(targetObject, value);
-      return api as API<T, U>;
+      return api as API<T,  CustomSettersOption<T>>;
     };
 
     if (customSetters) {
@@ -66,7 +69,7 @@ export const builderFactory = <T, U>(
       };
     }
 
-    return api as API<T, U>;
+    return api as API<T,  CustomSettersOption<T>>;
   };
   return { aBuilder, getSchema };
 };
