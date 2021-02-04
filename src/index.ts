@@ -32,7 +32,6 @@ type BaseMethods<T> = { build: () => T; getSchema: () => T };
  */
 export const builderFactory = <T, U>(
   schema: T,
-
   customSetters?: U
 ): BuildersFactory<T, U> => {
   const getSchema = () => {
