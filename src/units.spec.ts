@@ -1,6 +1,22 @@
 import { builderFactory } from '.';
 
 describe('createBuilder', () => {
+
+	it('should invoke custom setters', () => {
+		const schema = {
+			a: 1,
+			b: 3,
+			c: [],
+		};
+		const builder = builderFactory(schema, {push: (state:typeof schema,value:number) => {
+			state.c.push(value)
+		}}).aBuilder();
+		builder.push(123)
+		expect(builder.build().c).toHaveLength(1)
+		expect(builder.build().c[0]).toBe(123)
+
+	});
+
 	it('should prefix all methods with the "with" key word', () => {
 		const schema = {
 			a: 1,
@@ -8,6 +24,7 @@ describe('createBuilder', () => {
 			c: 'a',
 		};
 		const builder = builderFactory(schema).aBuilder();
+
 		expect(Object.keys(builder).sort()).toEqual(['withA','withB', 'withC', 'build', 'getSchema'].sort())
 	});
 
