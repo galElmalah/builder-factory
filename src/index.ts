@@ -10,7 +10,7 @@ export interface BuildersFactory<T, U> {
   getSchema: () => T;
 }
 
-type API<T, U> = {
+export type API<T, U> = {
   [K in keyof T as `with${Capitalize<string & K>}`]: (
     value: T[K]
   ) => API<T, U> & BaseMethods<T> & WrappedSetters<T, U>;
@@ -18,16 +18,16 @@ type API<T, U> = {
   BaseMethods<T> &
   WrappedSetters<T, U>;
 
-type WrappedSetters<T, U> = {
+export type WrappedSetters<T, U> = {
   [K in keyof U]: (
     value: any
   ) => API<T, U> & BaseMethods<T> & WrappedSetters<T, U>;
 };
 
-interface CustomSettersOption<T> {
+export interface CustomSettersOption<T> {
   [key: string]: (state: T, value: any) => void
 }
-type BaseMethods<T> = { build: () => T; getSchema: () => T };
+export type BaseMethods<T> = { build: () => T; getSchema: () => T };
 
 /**
  *
