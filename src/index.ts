@@ -24,19 +24,19 @@ export type WrappedSetters<T, U> = {
   ) => API<T, U> & BaseMethods<T> & WrappedSetters<T, U>;
 };
 
-export interface CustomSettersOption<T> {
-  [key: string]: (state: T, value: any) => void
-}
+// export interface U {
+//   [key: string]: (state: T, value: any) => void
+// }
 export type BaseMethods<T> = { build: () => T; getSchema: () => T };
 
 /**
  *
  * @param schema An object containing the default object. The builder type will be inferred from the structure of the scheme object.
  */
-export const builderFactory = <T>(
+export const builderFactory = <T,U>(
   schema: T,
-  customSetters?: CustomSettersOption<T>
-): BuildersFactory<T,  CustomSettersOption<T>> => {
+  customSetters?: U
+): BuildersFactory<T,  U> => {
   const getSchema = () => {
     return cloneDeep(schema);
   };
@@ -53,7 +53,7 @@ export const builderFactory = <T>(
 
     const setterWrapper = (setter) => (value: any) => {
       setter(targetObject, value);
-      return api as API<T,  CustomSettersOption<T>>;
+      return api as API<T,  U>;
     };
 
     if (customSetters) {
@@ -69,7 +69,7 @@ export const builderFactory = <T>(
       };
     }
 
-    return api as API<T,  CustomSettersOption<T>>;
+    return api as API<T,  U>;
   };
   return { aBuilder, getSchema };
 };
