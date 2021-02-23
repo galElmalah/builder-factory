@@ -21,7 +21,7 @@ const schema = {
 };
 const mySchemaBuilder = builderFactory(schema).aBuilder();
 
-// withA, withC etc are type safe.
+// withThis, withThat etc are type safe.
 const schemaObject = mySchemaBuilder.withThis(13).withThat('some string').build();
 /*
 schemaObject will be a new object containing the following fields
@@ -44,7 +44,7 @@ const schema = {
 };
 const mySchemaBuilder = builderFactory(schema, {myCustomSetter: (state, value) => state.that.push('yo yo')}).aBuilder();
 
-// withA, withC etc are type safe.
+// withThis, withThat etc are type safe.
 const schemaObject = mySchemaBuilder.withThis(13).myCustomSetter('some string').build();
 /*
 schemaObject will be a new object containing the following fields
