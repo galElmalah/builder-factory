@@ -20,7 +20,7 @@ export type API<T, U> = {
 
 export type WrappedSetters<T, U> = {
   [K in keyof U]: (
-    value: any
+    ...values:any
   ) => API<T, U> & BaseMethods<T> & WrappedSetters<T, U>;
 };
 
