@@ -57,7 +57,7 @@ export const builderFactory = <T, U>(
     };
 
     const setterWrapper = (setter) => (value: any) => {
-      setter(targetObject, isFunction(value) ? value() : value);
+      setter(targetObject,  value);
       return api as API<T, U>;
     };
 
@@ -69,7 +69,7 @@ export const builderFactory = <T, U>(
 
     for (const key in getSchema()) {
       api[`with${capitalize(key)}`] = (value: any) => {        
-        targetObject[key] = isFunction(value) ? value() : value;
+        targetObject[key] =  value;
         return api;
       };
     }

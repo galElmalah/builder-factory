@@ -109,18 +109,4 @@ describe('createBuilder', () => {
 
     expect(builderOne.build()).not.toEqual(builderTwo.build());
   });
-
-  it('should accept a function as a setter and invoke it', () => {
-    const schema = {
-      a: 1,
-      b: 3,
-      c: 'a',
-    };
-
-		const value = 7
-    const spy = () => value;
-		const builderOne = builderFactory(schema).aBuilder().withA(spy).build();
-
-    expect(builderOne.a).toBe(value)
-  });
 });
