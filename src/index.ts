@@ -12,15 +12,14 @@ export interface BuildersFactory<T, U> {
 
 export type API<T, U> = {
   [K in keyof T as `with${Capitalize<string & K>}`]: (
-    value: T[K]
+    value: T[K] | (() => T[K])
   ) => API<T, U> & BaseMethods<T> & WrappedSetters<T, U>;
-} &
-  BaseMethods<T> &
+} & BaseMethods<T> &
   WrappedSetters<T, U>;
 
 export type WrappedSetters<T, U> = {
   [K in keyof U]: (
-    ...values:any
+    ...values: any
   ) => API<T, U> & BaseMethods<T> & WrappedSetters<T, U>;
 };
 
@@ -33,16 +32,22 @@ export type BaseMethods<T> = { build: () => T; getSchema: () => T };
  *
  * @param schema An object containing the default object. The builder type will be inferred from the structure of the scheme object.
  */
-export const builderFactory = <T,U>(
-  schema: T,
+export const builderFactory = <T, U>(
+  schema: T | (() => T),
   customSetters?: U
-): BuildersFactory<T,  U> => {
+): BuildersFactory<T, U> => {
+  const isFunction = (suspect: any) => suspect instanceof Function;
+
   const getSchema = () => {
+    if (isFunction(schema)) {
+      return (schema as Function)();
+    }
+
     return cloneDeep(schema);
   };
 
   const aBuilder = () => {
-    const targetObject: T = cloneDeep(schema);
+    const targetObject: T = getSchema();
 
     const api: unknown = {
       build: () => {
@@ -52,8 +57,8 @@ export const builderFactory = <T,U>(
     };
 
     const setterWrapper = (setter) => (value: any) => {
-      setter(targetObject, value);
-      return api as API<T,  U>;
+      setter(targetObject, isFunction(value) ? value() : value);
+      return api as API<T, U>;
     };
 
     if (customSetters) {
@@ -62,14 +67,15 @@ export const builderFactory = <T,U>(
       }
     }
 
-    for (const key in schema) {
-      api[`with${capitalize(key)}`] = (value: any) => {
-        targetObject[key] = value;
+    for (const key in getSchema()) {
+      api[`with${capitalize(key)}`] = (value: any) => {        
+        targetObject[key] = isFunction(value) ? value() : value;
         return api;
       };
     }
 
-    return api as API<T,  U>;
+    return api as API<T, U>;
   };
+
   return { aBuilder, getSchema };
 };
