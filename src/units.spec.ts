@@ -109,4 +109,24 @@ describe('createBuilder', () => {
 
     expect(builderOne.build()).not.toEqual(builderTwo.build());
   });
+
+	it('should be composable', () => {
+    const subSchema = {
+      a: Math.random(),
+      b: 3,
+      c: 'a',
+    };
+    const subBuilder = builderFactory(subSchema).aBuilder();
+
+    const mainSchema = () => ({
+      a: Math.random(),
+      b: 3,
+      c: 'a',
+			complex: subBuilder.build()
+    });
+
+    const mainBuilder = builderFactory(mainSchema).aBuilder();
+
+    expect(mainBuilder.build().complex).toEqual(subBuilder.build());
+  });
 });
