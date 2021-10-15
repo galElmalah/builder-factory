@@ -2,6 +2,9 @@
 
 > Generated using [Scaffolder](https://github.com/galElmalah/scaffolder)!
 
+[![npm version](https://badge.fury.io/js/builder-factory-creator.svg)](https://badge.fury.io/js/builder-factory-creator)
+
+
 typescript friendly builder creator!
 
 ## Installation
