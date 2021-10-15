@@ -3,7 +3,7 @@ on: push
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment: secrets
+    environment: publish
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
