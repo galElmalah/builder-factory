@@ -4,8 +4,7 @@
 
 [![npm version](https://badge.fury.io/js/builder-factory-creator.svg)](https://badge.fury.io/js/builder-factory-creator)
 
-
-typescript friendly builder creator!
+Typescript friendly builders creator.
 
 ## Installation
 
@@ -15,7 +14,9 @@ typescript friendly builder creator!
 
 ### Basic usage
 
-All properties will be prefixed with the a `with` key word.
+All properties will be prefixed with a `with` and `omit` key words.  
+`with` methods acts as setters and accepts a value that matches the schema type.  
+`omit` methods delete the property from the current builder instance.
 
 ```typescript
 import { builderFactory } from 'builder-factory-creator';
@@ -37,6 +38,15 @@ schemaObject will be a new object containing the following fields
   this:13,
   what:3,
   that: 'some string'
+}
+*/
+
+const schemaObjectWithoutThat = mySchemaBuilder.omitThat();
+/*
+schemaObjectWithoutThat will be a new object containing the following fields
+{
+  this:13,
+  what:3
 }
 */
 ```
