@@ -17,7 +17,7 @@ describe('createBuilder', () => {
     expect(builder.build().c[0]).toBe(123);
   });
 
-  it('should prefix all methods with the "with" key word', () => {
+  it('should prefix all methods with the "with" and "omit" key word', () => {
     const schema = {
       a: 1,
       b: 3,
@@ -26,7 +26,7 @@ describe('createBuilder', () => {
     const builder = builderFactory(schema).aBuilder();
 
     expect(Object.keys(builder).sort()).toEqual(
-      ['withA', 'withB', 'withC', 'build', 'getSchema'].sort()
+      ['withA', 'withB', 'withC','omitA', 'omitB', 'omitC', 'build', 'getSchema'].sort()
     );
   });
 
@@ -82,11 +82,13 @@ describe('createBuilder', () => {
       c: 'a',
     };
 
+
     const builderOne = builderFactory(schema)
       .aBuilder()
       .withA(123)
       .withC('my new string')
       .build();
+
     const builderTwo = builderFactory(schema)
       .aBuilder()
       .withA(1234)
@@ -128,5 +130,27 @@ describe('createBuilder', () => {
     const mainBuilder = builderFactory(mainSchema).aBuilder();
 
     expect(mainBuilder.build().complex).toEqual(subBuilder.build());
+  });
+
+  it('should allow to omit properties', () => {
+    const subSchema = {
+      a: Math.random(),
+      b: 3,
+      c: 'a',
+    };
+
+    const subBuilder = builderFactory(subSchema).aBuilder();
+
+    const mainSchema = () => ({
+      a: Math.random(),
+      b: 3,
+      c: 'a',
+			complex: subBuilder.build()
+    });
+
+    const mainBuilder = builderFactory(mainSchema).aBuilder().omitComplex()
+
+    expect(mainBuilder.build()).not.toContain('complex')
+    expect(mainBuilder.omitA().build()).not.toContain('a')
   });
 });

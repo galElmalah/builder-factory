@@ -15,7 +15,7 @@ export type API<T, U> = {
     value: T[K] | (() => T[K])
   ) => API<T, U> & BaseMethods<T> & WrappedSetters<T, U>;
 } & BaseMethods<T> &
-  WrappedSetters<T, U>;
+  WrappedSetters<T, U> &  {[K in keyof T as `omit${Capitalize<string & K>}`]: () => API<Omit<T, K>, U> & BaseMethods<Omit<T, K>> & WrappedSetters<Omit<T, K>, U>};
 
 export type WrappedSetters<T, U> = {
   [K in keyof U]: (
@@ -70,6 +70,11 @@ export const builderFactory = <T, U>(
     for (const key in getSchema()) {
       api[`with${capitalize(key)}`] = (value: any) => {        
         targetObject[key] =  value;
+        return api;
+      };
+
+      api[`omit${capitalize(key)}`] = () => {        
+        delete targetObject[key]
         return api;
       };
     }
