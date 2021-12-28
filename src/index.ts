@@ -9,13 +9,22 @@ export interface BuildersFactory<T, U> {
   aBuilder(): API<T, U>;
   getSchema: () => T;
 }
-
-export type API<T, U> = {
+type WithMethods<T, U> = {
   [K in keyof T as `with${Capitalize<string & K>}`]: (
     value: T[K] | (() => T[K])
   ) => API<T, U> & BaseMethods<T> & WrappedSetters<T, U>;
-} & BaseMethods<T> &
-  WrappedSetters<T, U> &  {[K in keyof T as `omit${Capitalize<string & K>}`]: () => API<Omit<T, K>, U> & BaseMethods<Omit<T, K>> & WrappedSetters<Omit<T, K>, U>};
+};
+
+type OmitMethods<T, U> = {
+  [K in keyof T as `omit${Capitalize<string & K>}`]: () => API<Omit<T, K>, U> &
+    BaseMethods<Omit<T, K>> &
+    WrappedSetters<Omit<T, K>, U>;
+};
+
+export type API<T, U> = WithMethods<T, U> &
+  OmitMethods<T, U> &
+  BaseMethods<T> &
+  WrappedSetters<T, U>;
 
 export type WrappedSetters<T, U> = {
   [K in keyof U]: (
@@ -23,9 +32,6 @@ export type WrappedSetters<T, U> = {
   ) => API<T, U> & BaseMethods<T> & WrappedSetters<T, U>;
 };
 
-// export interface U {
-//   [key: string]: (state: T, value: any) => void
-// }
 export type BaseMethods<T> = { build: () => T; getSchema: () => T };
 
 /**
@@ -57,7 +63,7 @@ export const builderFactory = <T, U>(
     };
 
     const setterWrapper = (setter) => (value: any) => {
-      setter(targetObject,  value);
+      setter(targetObject, value);
       return api as API<T, U>;
     };
 
@@ -68,13 +74,13 @@ export const builderFactory = <T, U>(
     }
 
     for (const key in getSchema()) {
-      api[`with${capitalize(key)}`] = (value: any) => {        
-        targetObject[key] =  value;
+      api[`with${capitalize(key)}`] = (value: any) => {
+        targetObject[key] = value;
         return api;
       };
 
-      api[`omit${capitalize(key)}`] = () => {        
-        delete targetObject[key]
+      api[`omit${capitalize(key)}`] = () => {
+        delete targetObject[key];
         return api;
       };
     }
